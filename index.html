@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotGoogle</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #202124; /* Background Dark Mode */
+            color: #e8eaed; /* Warna teks terang */
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Fokus total ke area pencarian di tengah layar */
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 584px;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 64px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            user-select: none;
+            letter-spacing: -1px;
+            text-align: center;
+        }
+
+        /* Warna logo NotGoogle versi pastel/soft untuk Dark Mode */
+        .g1 { color: #8ab4f8; } /* Biru */
+        .o1 { color: #f28b82; } /* Merah */
+        .o2 { color: #fdd663; } /* Kuning */
+        .g2 { color: #8ab4f8; } 
+        .l  { color: #81c995; } /* Hijau */
+        .e  { color: #f28b82; }
+
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .search-box {
+            display: flex;
+            width: 100%;
+            border: 1px solid #5f6368;
+            padding: 12px 18px;
+            border-radius: 24px;
+            background: #202124;
+            margin-bottom: 25px;
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+
+        /* Efek hover & fokus saat mengetik */
+        .search-box:hover, .search-box:focus-within {
+            background-color: #303134;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.4);
+            border-color: transparent;
+        }
+
+        .search-box input[type="text"] {
+            flex-grow: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 16px;
+            color: #e8eaed;
+        }
+
+        .buttons input[type="submit"] {
+            background-color: #303134;
+            border: 1px solid #303134;
+            border-radius: 4px;
+            color: #e8eaed;
+            font-size: 14px;
+            padding: 0 24px;
+            height: 40px;
+            cursor: pointer;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        .buttons input[type="submit"]:hover {
+            background-color: #3c4043;
+            border: 1px solid #5f6368;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        <div class="logo">
+            <span class="g1">N</span><span class="o1">o</span><span class="o2">t</span><span class="g2">G</span><span class="o1">o</span><span class="o2">o</span><span class="g2">g</span><span class="l">l</span><span class="e">e</span>
+        </div>
+
+        <form action="https://www.google.com/search" method="GET">
+            <div class="search-box">
+                <input type="text" name="q" autofocus required autocomplete="off">
+            </div>
+            <div class="buttons">
+                <input type="submit" value="Cari di NotGoogle">
+            </div>
+        </form>
+    </main>
+
+</body>
+</html>

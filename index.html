@@ -22,6 +22,7 @@
             justify-content: center;
             align-items: center;
             position: relative;
+            overflow: hidden;
         }
 
         /* Ikon Setting di pojok kanan atas */
@@ -37,11 +38,13 @@
             justify-content: center;
             transition: background-color 0.2s;
             color: #e8eaed;
-            text-decoration: none;
+            background: none;
+            border: none;
+            outline: none;
         }
 
         .settings-icon:hover {
-            background-color: #303134; /* Efek hover bundar ala Google */
+            background-color: #303134; 
         }
 
         .settings-icon svg {
@@ -127,32 +130,266 @@
             border: 1px solid #5f6368;
             color: #ffffff;
         }
+
+        /* --- STYLING MODAL COMPONENT --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-window {
+            background-color: #303134;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+            border: 1px solid #3c4043;
+            transform: translateY(-20px);
+            transition: transform 0.25s ease;
+        }
+
+        .modal-overlay.active .modal-window {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #3c4043;
+            padding-bottom: 10px;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #9aa0a6;
+            font-size: 22px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: #e8eaed;
+        }
+
+        .setting-section {
+            margin-bottom: 20px;
+        }
+
+        .setting-section label {
+            display: block;
+            font-size: 14px;
+            color: #9aa0a6;
+            margin-bottom: 8px;
+        }
+
+        .setting-section select {
+            width: 100%;
+            background-color: #202124;
+            color: #e8eaed;
+            border: 1px solid #5f6368;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .setting-section select:focus {
+            border-color: #8ab4f8;
+        }
+
+        .btn-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background-color: #3c4043;
+            color: #8ab4f8;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid #5f6368;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+
+        .btn-link:hover {
+            background-color: #4f5357;
+            color: #aecbfa;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Tombol Setting Pojok Kanan Atas -->
-    <!-- Catatan: Diarahkan ke Google Preferences karena Chrome memblokir link internal chrome:// -->
-    <a href="https://www.google.com/preferences" target="_blank" class="settings-icon" title="Setelan">
+    <button class="settings-icon" id="openModalBtn" title="Setelan">
         <svg viewBox="0 0 24 24">
             <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.03,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
         </svg>
-    </a>
+    </button>
 
     <main>
         <div class="logo">
             <span class="g1">N</span><span class="o1">o</span><span class="o2">t</span><span class="g2">G</span><span class="o1">o</span><span class="o2">o</span><span class="g2">g</span><span class="l">l</span><span class="e">e</span>
         </div>
 
-        <form action="https://www.google.com/search" method="GET">
+        <form action="https://www.google.com/search" method="GET" id="searchForm">
             <div class="search-box">
-                <input type="text" name="q" autofocus required autocomplete="off">
+                <input type="text" name="q" id="searchInput" autofocus required autocomplete="off">
+                <input type="hidden" name="hl" id="langParam" value="id">
             </div>
             <div class="buttons">
-                <input type="submit" value="Cari di NotGoogle">
+                <input type="submit" id="submitBtn" value="Cari di NotGoogle">
             </div>
         </form>
     </main>
 
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h3 id="modalTitle">Pengaturan</h3>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            
+            <div class="setting-section">
+                <label id="labelEngine" for="engineSelect">Search Engine Utama</label>
+                <select id="engineSelect">
+                    <option value="google">Google</option>
+                    <option value="bing">Bing</option>
+                    <option value="duckduckgo">DuckDuckGo</option>
+                </select>
+            </div>
+
+            <div class="setting-section">
+                <label id="labelLang" for="langSelect">Bahasa (Language)</label>
+                <select id="langSelect">
+                    <option value="id">Bahasa Indonesia</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+
+            <div class="setting-section">
+                <label id="labelSys">Setelan Sistem</label>
+                <a href="https://www.google.com/preferences" target="_blank" class="btn-link" id="extLinkBtn">
+                    Buka Google Preferences &nearr;
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        
+        const searchForm = document.getElementById('searchForm');
+        const searchInput = document.getElementById('searchInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const langParam = document.getElementById('langParam');
+        
+        const engineSelect = document.getElementById('engineSelect');
+        const langSelect = document.getElementById('langSelect');
+
+        // Elemen Teks Pengaturan untuk Translasi
+        const modalTitle = document.getElementById('modalTitle');
+        const labelEngine = document.getElementById('labelEngine');
+        const labelLang = document.getElementById('labelLang');
+        const labelSys = document.getElementById('labelSys');
+        const extLinkBtn = document.getElementById('extLinkBtn');
+
+        // Data kamus translasi sederhana
+        const dictionary = {
+            id: {
+                title: "Pengaturan",
+                engine: "Search Engine Utama",
+                lang: "Bahasa (Language)",
+                sys: "Setelan Sistem",
+                linkBtn: "Buka Google Preferences ↗",
+                btnGoogle: "Cari di NotGoogle",
+                btnBing: "Cari di Bing",
+                btnDDG: "Cari di DuckDuckGo"
+            },
+            en: {
+                title: "Settings",
+                engine: "Primary Search Engine",
+                lang: "Language",
+                sys: "System Settings",
+                linkBtn: "Open Google Preferences ↗",
+                btnGoogle: "Search on NotGoogle",
+                btnBing: "Search on Bing",
+                btnDDG: "Search on DuckDuckGo"
+            }
+        };
+
+        // Buka & Tutup Modal
+        openModalBtn.addEventListener('click', () => settingsModal.classList.add('active'));
+        closeModalBtn.addEventListener('click', () => settingsModal.classList.remove('active'));
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal) settingsModal.classList.remove('active');
+        });
+
+        // Fungsi sinkronisasi teks berdasarkan mesin dan bahasa terpilih
+        function updateUI() {
+            const lang = langSelect.value;
+            const engine = engineSelect.value;
+
+            // Update Teks Modal
+            modalTitle.innerText = dictionary[lang].title;
+            labelEngine.innerText = dictionary[lang].engine;
+            labelLang.innerText = dictionary[lang].lang;
+            labelSys.innerText = dictionary[lang].sys;
+            extLinkBtn.innerText = dictionary[lang].linkBtn;
+
+            // Update Parameter & Action Form
+            if (engine === 'google') {
+                searchForm.action = 'https://www.google.com/search';
+                langParam.name = 'hl'; // Google pakai parameter hl
+                langParam.value = lang;
+                submitBtn.value = dictionary[lang].btnGoogle;
+            } else if (engine === 'bing') {
+                searchForm.action = 'https://www.bing.com/search';
+                langParam.name = 'setlang'; // Bing pakai parameter setlang
+                langParam.value = lang;
+                submitBtn.value = dictionary[lang].btnBing;
+            } else if (engine === 'duckduckgo') {
+                searchForm.action = 'https://duckduckgo.com/';
+                langParam.name = 'kl'; // Parameter wilayah/bahasa DuckDuckGo
+                langParam.value = lang === 'id' ? 'id-id' : 'us-en';
+                submitBtn.value = dictionary[lang].btnDDG;
+            }
+        }
+
+        // Listener ketika pilihan Search Engine diganti
+        engineSelect.addEventListener('change', updateUI);
+
+        // Listener ketika pilihan Bahasa diganti
+        langSelect.addEventListener('change', updateUI);
+    </script>
 </body>
 </html>
